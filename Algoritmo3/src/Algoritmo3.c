@@ -22,8 +22,18 @@
 
 
 
-int main(void) {
-	puts("!!!Hello World!!!"); /* prints !!!Hello World!!! */
+int main(int argc, char *argv[]) {
+	while(--argc>0){
+		printf("lei %s\n",*++argv);
+		printf("lei %s\n",*argv);
+		int sizeinput = sizeof(*argv);
+		int var;
+		for (var = 0; var < sizeinput; ++var) {
+			printf("%c",*argv[var]);
+		}
+
+
+	}
 
 	return EXIT_SUCCESS;
 }
