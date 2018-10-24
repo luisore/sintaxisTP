@@ -41,6 +41,8 @@ char tabla_transiciones[10][15] = {
 //Estado fin de texto 7
 
 int main(int argc, char *argv[]) {
+	char buffer_palabra[15];
+	int contador_caracter_palabra = 0;
 
 	void imprimir(char tabla[ROWS][COLS]){
 		puts("/////TABLA TRANSICIONES/////");
@@ -83,10 +85,16 @@ int main(int argc, char *argv[]) {
 		char caracter = '\0';
 		for (int var = 0; var < strlen(*argv); ++var) {
 			caracter = (*argv)[var];
+			buffer_palabra[contador_caracter_palabra]=caracter;
 			estado_actual = buscar_nuevo_estado(estado_actual,caracter);
 			imprimir_caracter_y_estado(var, caracter,estado_actual);
+			contador_caracter_palabra++;
+			//la variable var llega a 40, necesito otra que se reinicie cada vez que encuentra una palabra
+			contador_caracter_palabra = (estado_actual=='0')?0:contador_caracter_palabra;
 			if(estado_actual=='6'){
-				puts("encontre palabra perroohh!!!");
+				buffer_palabra[--contador_caracter_palabra]='\0';
+				printf("Encontre palabra valida!!!: %s\n",buffer_palabra);
+				contador_caracter_palabra = 0;
 			}
 		}
 	}
