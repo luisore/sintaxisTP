@@ -57,8 +57,12 @@ int main(int argc, char *argv[]) {
 	void imprimir_caracter_y_estado(char contador,char caracter, char estado){
 		printf("Caracter %d: %c Estado Actual: %c\n", contador, caracter,estado);
 	}
+	
+	int obtener_row(char estado_actual){
+		return (estado_actual - '0') + 1;
+	}
 
-	int obtener_columna(char caracter_leido){
+	int obtener_col(char caracter_leido){
 		for (int var = 0; var < COLS; ++var) {
 			if(tabla_transiciones[0][var] == caracter_leido){
 				return var;
@@ -68,9 +72,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	char buscar_nuevo_estado(char estado_actual,char caracter_leido){
-		int row_number = (estado_actual - '0') + 1;
-		int col_number = obtener_columna(caracter_leido);
-
+		int row_number = obtener_row(estado_actual);
+		int col_number = obtener_col(caracter_leido);
 		return tabla_transiciones[row_number][col_number];
 	}
 
@@ -81,7 +84,7 @@ int main(int argc, char *argv[]) {
 		for (int var = 0; var < strlen(*argv); ++var) {
 			caracter = (*argv)[var];
 			estado_actual = buscar_nuevo_estado(estado_actual,caracter);
-			imprimir_caracter_y_estado(var, (*argv)[var],estado_actual);
+			imprimir_caracter_y_estado(var, caracter,estado_actual);
 		}
 	}
 
