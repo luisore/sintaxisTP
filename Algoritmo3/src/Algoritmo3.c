@@ -85,6 +85,9 @@ int main(int argc, char *argv[]) {
 			caracter = (*argv)[var];
 			estado_actual = buscar_nuevo_estado(estado_actual,caracter);
 			imprimir_caracter_y_estado(var, caracter,estado_actual);
+			if(estado_actual=='6'){
+				puts("encontre palabra perroohh!!!");
+			}
 		}
 	}
 
