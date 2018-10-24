@@ -19,20 +19,70 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
+#define ROWS 10
+#define COLS 15
+
+char tabla_transiciones[10][15] = {
+	{'-','0','1','2','3','4','5','6','7','8','9','.','F','#','f'},
+	{'0','1','1','1','1','1','1','1','1','1','1','5','5','0','7'},
+	{'1','2','2','2','2','2','2','2','2','2','2','3','4','0','7'},
+	{'2','2','2','2','2','2','2','2','2','2','2','5','4','0','7'},
+	{'3','4','4','5','5','5','5','5','5','5','5','5','5','6','8'},
+	{'4','5','5','5','5','5','5','5','5','5','5','5','5','6','8'},
+	{'5','5','5','5','5','5','5','5','5','5','5','5','5','0','7'},
+	{'6','1','1','1','1','1','1','1','1','1','1','5','5','0','7'},
+	{'7','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+	{'8','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+};
+//Estados de aceptacion 6, Aceptacion y fin de texto 8
+//Estado fin de texto 7
 
 int main(int argc, char *argv[]) {
-	while(--argc>0){
-		printf("lei %s\n",*++argv);
-		printf("lei %s\n",*argv);
-		int sizeinput = sizeof(*argv);
-		int var;
-		for (var = 0; var < sizeinput; ++var) {
-			printf("%c",*argv[var]);
+
+	void imprimir(char tabla[ROWS][COLS]){
+		puts("/////TABLA TRANSICIONES/////");
+		for (int i = 0; i < ROWS; ++i) {
+			for (int j = 0; j < COLS; ++j) {
+				printf("%c ",tabla[i][j]);
+			}
+			puts("");
 		}
+		puts("///FIN TABLA TRANSICIONES///\n");
+	}
+	imprimir(tabla_transiciones);
 
+	void imprimir_caracter_y_estado(char contador,char caracter, char estado){
+		printf("Caracter %d: %c Estado Actual: %c\n", contador, caracter,estado);
+	}
 
+	int obtener_columna(char caracter_leido){
+		for (int var = 0; var < COLS; ++var) {
+			if(tabla_transiciones[0][var] == caracter_leido){
+				return var;
+			}
+			//return "other character";
+		}
+	}
+
+	char buscar_nuevo_estado(char estado_actual,char caracter_leido){
+		int row_number = (estado_actual - '0') + 1;
+		int col_number = obtener_columna(caracter_leido);
+
+		return tabla_transiciones[row_number][col_number];
+	}
+
+	while(--argc>0){
+		printf("Entrada %s\n\n",*++argv);
+		char estado_actual = '0';
+		char caracter = '\0';
+		for (int var = 0; var < strlen(*argv); ++var) {
+			caracter = (*argv)[var];
+			estado_actual = buscar_nuevo_estado(estado_actual,caracter);
+			imprimir_caracter_y_estado(var, (*argv)[var],estado_actual);
+		}
 	}
 
 	return EXIT_SUCCESS;
