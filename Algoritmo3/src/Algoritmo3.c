@@ -12,8 +12,11 @@
 	caso contrario, la cadena no pertenece al lenguaje.
 
 	ER [0-9]+F|[0-9]\.[01]? Centinela: #
+	cadena 1:
 	(VALIDAS)			   |	(NO VALIDAS)
 	0123F#0.1#1.#99F#5F#9.0#99999#FFFFF#9.1F
+	cadena 2:
+	0123F#0.1#1.#99F#5F#9.0#99999#FFFFF#678F#9.1F
  ============================================================================
  */
 
@@ -23,21 +26,22 @@
 
 
 #define ROWS 10
-#define COLS 15
+#define COLS 16
 #define ESTADO_ACEPTACION '6'
 #define ESTADO_ACEPTACION_Y_FIN '8'
+#define OTHER_CHARACTER 'o'
 
-char tabla_transiciones[10][15] = {
-	{'-','0','1','2','3','4','5','6','7','8','9','.','F','#','f'},
-	{'0','1','1','1','1','1','1','1','1','1','1','5','5','0','7'},
-	{'1','2','2','2','2','2','2','2','2','2','2','3','4','0','7'},
-	{'2','2','2','2','2','2','2','2','2','2','2','5','4','0','7'},
-	{'3','4','4','5','5','5','5','5','5','5','5','5','5','6','8'},
-	{'4','5','5','5','5','5','5','5','5','5','5','5','5','6','8'},
-	{'5','5','5','5','5','5','5','5','5','5','5','5','5','0','7'},
-	{'6','1','1','1','1','1','1','1','1','1','1','5','5','0','7'},
-	{'7','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
-	{'8','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+char tabla_transiciones[ROWS][COLS] = {
+	{'-','0','1','2','3','4','5','6','7','8','9','.','F','#','f',OTHER_CHARACTER},
+	{'0','1','1','1','1','1','1','1','1','1','1','5','5','0','7','5'},
+	{'1','2','2','2','2','2','2','2','2','2','2','3','4','0','7','5'},
+	{'2','2','2','2','2','2','2','2','2','2','2','5','4','0','7','5'},
+	{'3','4','4','5','5','5','5','5','5','5','5','5','5','6','8','5'},
+	{'4','5','5','5','5','5','5','5','5','5','5','5','5','6','8','5'},
+	{'5','5','5','5','5','5','5','5','5','5','5','5','5','0','7','5'},
+	{'6','1','1','1','1','1','1','1','1','1','1','5','5','0','7','5'},
+	{'7','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+	{'8','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
 };
 //Estados de aceptacion 6, Aceptacion y fin de texto 8
 //Estado fin de texto 7
@@ -71,8 +75,8 @@ int main(int argc, char *argv[]) {
 			if(tabla_transiciones[0][var] == caracter_leido){
 				return var;
 			}
-			//return "other character";
 		}
+		return tabla_transiciones[0][OTHER_CHARACTER];
 	}
 
 	char buscar_nuevo_estado(char estado_actual,char caracter_leido){
@@ -90,12 +94,21 @@ int main(int argc, char *argv[]) {
 	}
 
 	void mostrar_palabras_reconocidas(){
-		puts("Palabras Encontradas:");
+		puts("\nPalabras Encontradas:\n");
 		int i;
 	    for(i=0;i<cantidad_palabras;i++)
 	    {
 	        printf("%d° palabra: %s\n",i+1,lista_palabras[i]);
 	    }
+	}
+
+	void liberar_recursos(){
+		int i;
+	    for(i=0;i<cantidad_palabras;i++)
+	    {
+	        free(lista_palabras[i]);
+	    }
+	    free(lista_palabras);
 	}
 
 	char buffer_palabra[30];
@@ -114,12 +127,13 @@ int main(int argc, char *argv[]) {
 			contador_caracter_palabra = (estado_actual=='0') ? 0 : contador_caracter_palabra;
 			if(estado_actual==ESTADO_ACEPTACION || estado_actual == ESTADO_ACEPTACION_Y_FIN){
 				buffer_palabra[--contador_caracter_palabra]='\0';
-				printf("longitud palabra encontrada: %d\n",strlen(buffer_palabra));
+				printf("\nReconoci palabra: %s, Longitud %d\n\n",buffer_palabra ,strlen(buffer_palabra));
 				agregar_palabra(buffer_palabra);
 				contador_caracter_palabra = 0;
 			}
 		}
 		mostrar_palabras_reconocidas();
+		liberar_recursos();
 	}
 
 	return EXIT_SUCCESS;
