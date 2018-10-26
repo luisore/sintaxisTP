@@ -81,34 +81,49 @@ int main(int argc, char *argv[]) {
 
 	char ** lista_palabras = NULL;
 	int cantidad_palabras = 0;
-	void agregar_palabra(char *palabra, char **lista_palabras){
-		printf("palabra: %s \n",palabra);
-		//lista_palabras = (char**)realloc(lista_palabras, cantidad_palabras * sizeof(char*));
-		//lista_palabras[cantidad_palabras++] = strdup(palabra);
+	char ** agregar_palabra(char *palabra){
+		printf("%d\n",cantidad_palabras);
+		char *copia_palabra = strdup(palabra);
 
-/*
-		while(*lista_palabras != NULL){
-			cantidad_palabras++;
-			lista_palabras++;
-		}
-		printf("%d",cantidad_palabras);
-*/
-		//lista_palabras = (char**)realloc(lista_palabras, cantidad_palabras * sizeof(char*));
-
-		//lista_palabras[cantidad_palabras] = strdup(palabra);
+		int tamanio_lista = cantidad_palabras * sizeof(char *);
+		int sizeso = sizeof(char *);
+		printf("tamanio lista %d, sizeof %d \n",tamanio_lista, sizeso);
+		lista_palabras = (char**)realloc(lista_palabras, tamanio_lista);
 
 
+		lista_palabras[cantidad_palabras++] = copia_palabra;
+		printf("cantidad palabras: %d\n",cantidad_palabras);
+		printf("palabra %s \n",lista_palabras[(cantidad_palabras-1)]);
+
+		printf("direccion %u \n", lista_palabras);
+
+
+
+
+	    for(int i=0;i<cantidad_palabras;i++)
+	    {
+	        printf("LISTA: %s\n",lista_palabras[i]);
+	    }
+
+	    return lista_palabras;
 	}
 
-	void mostrar_palabras_reconocidas(){
+	void mostrar_palabras_reconocidas(char **lista_palabras){
 		puts("Palabras Encontradas:");
+		printf("%d\n",cantidad_palabras);
+		printf("palabra %u \n", lista_palabras);
+		printf("palabra %s \n", lista_palabras[(cantidad_palabras-1)]);
+
+		/*
+		printf("mostrar %s",lista_palabras[0]);
+		printf("mostrar %s",lista_palabras[1]);
+		printf("mostrar %s",lista_palabras[2]);
 		int i = 0;
-		puts("ljhdjldda");
-		printf("saada %s",lista_palabras[0]);
 		while(*lista_palabras != NULL){
 			printf("palabra: %s \n",lista_palabras[i++]);
 			lista_palabras++;
 		}
+		*/
 	}
 
 	char buffer_palabra[15];
@@ -127,11 +142,11 @@ int main(int argc, char *argv[]) {
 			contador_caracter_palabra = (estado_actual=='0') ? 0 : contador_caracter_palabra;
 			if(estado_actual=='6'){
 				buffer_palabra[--contador_caracter_palabra]='\0';
-				agregar_palabra(buffer_palabra,lista_palabras);
+				agregar_palabra(buffer_palabra);
 				contador_caracter_palabra = 0;
 			}
 		}
-		//mostrar_palabras_reconocidas();
+		//mostrar_palabras_reconocidas(lista_palabras);
 	}
 
 	return EXIT_SUCCESS;
