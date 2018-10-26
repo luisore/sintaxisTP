@@ -64,8 +64,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	int obtener_col(char caracter_leido){
-		int var;
-		for (var = 0; var < COLS; ++var) {
+		for (int var = 0; var < COLS; ++var) {
 			if(tabla_transiciones[0][var] == caracter_leido){
 				return var;
 			}
@@ -82,7 +81,7 @@ int main(int argc, char *argv[]) {
 	char ** lista_palabras = NULL;
 	int cantidad_palabras = 0;
 	char ** agregar_palabra(char *palabra){
-		printf("%d\n",cantidad_palabras);
+		printf("cantidad palabras: %d\n",cantidad_palabras);
 		char *copia_palabra = strdup(palabra);
 
 		int tamanio_lista = cantidad_palabras * sizeof(char *);
@@ -126,7 +125,7 @@ int main(int argc, char *argv[]) {
 		*/
 	}
 
-	char buffer_palabra[15];
+	char buffer_palabra[30];
 	int contador_caracter_palabra = 0;
 	while(--argc>0){
 		printf("Entrada %s\n\n",*++argv);
@@ -142,9 +141,11 @@ int main(int argc, char *argv[]) {
 			contador_caracter_palabra = (estado_actual=='0') ? 0 : contador_caracter_palabra;
 			if(estado_actual=='6'){
 				buffer_palabra[--contador_caracter_palabra]='\0';
+				//pense q el problma esta aca en el buffer pero parece q no
 				agregar_palabra(buffer_palabra);
 				contador_caracter_palabra = 0;
 			}
+			printf("\n contador caracter %d \n",contador_caracter_palabra);
 		}
 		//mostrar_palabras_reconocidas(lista_palabras);
 	}
