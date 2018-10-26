@@ -24,6 +24,8 @@
 
 #define ROWS 10
 #define COLS 15
+#define ESTADO_ACEPTACION '6'
+#define ESTADO_ACEPTACION_Y_FIN '8'
 
 char tabla_transiciones[10][15] = {
 	{'-','0','1','2','3','4','5','6','7','8','9','.','F','#','f'},
@@ -64,7 +66,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	int obtener_col(char caracter_leido){
-		for (int var = 0; var < COLS; ++var) {
+		int var;
+		for (var = 0; var < COLS; ++var) {
 			if(tabla_transiciones[0][var] == caracter_leido){
 				return var;
 			}
@@ -80,49 +83,19 @@ int main(int argc, char *argv[]) {
 
 	char ** lista_palabras = NULL;
 	int cantidad_palabras = 0;
-	char ** agregar_palabra(char *palabra){
-		printf("cantidad palabras: %d\n",cantidad_palabras);
-		char *copia_palabra = strdup(palabra);
-
-		int tamanio_lista = cantidad_palabras * sizeof(char *);
-		int sizeso = sizeof(char *);
-		printf("tamanio lista %d, sizeof %d \n",tamanio_lista, sizeso);
-		lista_palabras = (char**)realloc(lista_palabras, tamanio_lista);
-
-
-		lista_palabras[cantidad_palabras++] = copia_palabra;
-		printf("cantidad palabras: %d\n",cantidad_palabras);
-		printf("palabra %s \n",lista_palabras[(cantidad_palabras-1)]);
-
-		printf("direccion %u \n", lista_palabras);
-
-
-
-
-	    for(int i=0;i<cantidad_palabras;i++)
-	    {
-	        printf("LISTA: %s\n",lista_palabras[i]);
-	    }
-
-	    return lista_palabras;
+	void agregar_palabra(char *palabra){
+		cantidad_palabras++;
+		lista_palabras = (char**)realloc(lista_palabras, cantidad_palabras * sizeof(char *));
+		lista_palabras[cantidad_palabras-1] = strdup(palabra);
 	}
 
-	void mostrar_palabras_reconocidas(char **lista_palabras){
+	void mostrar_palabras_reconocidas(){
 		puts("Palabras Encontradas:");
-		printf("%d\n",cantidad_palabras);
-		printf("palabra %u \n", lista_palabras);
-		printf("palabra %s \n", lista_palabras[(cantidad_palabras-1)]);
-
-		/*
-		printf("mostrar %s",lista_palabras[0]);
-		printf("mostrar %s",lista_palabras[1]);
-		printf("mostrar %s",lista_palabras[2]);
-		int i = 0;
-		while(*lista_palabras != NULL){
-			printf("palabra: %s \n",lista_palabras[i++]);
-			lista_palabras++;
-		}
-		*/
+		int i;
+	    for(i=0;i<cantidad_palabras;i++)
+	    {
+	        printf("%d° palabra: %s\n",i+1,lista_palabras[i]);
+	    }
 	}
 
 	char buffer_palabra[30];
@@ -139,15 +112,14 @@ int main(int argc, char *argv[]) {
 			imprimir_caracter_y_estado(iteracion, caracter,estado_actual);
 			contador_caracter_palabra++;
 			contador_caracter_palabra = (estado_actual=='0') ? 0 : contador_caracter_palabra;
-			if(estado_actual=='6'){
+			if(estado_actual==ESTADO_ACEPTACION || estado_actual == ESTADO_ACEPTACION_Y_FIN){
 				buffer_palabra[--contador_caracter_palabra]='\0';
-				//pense q el problma esta aca en el buffer pero parece q no
+				printf("longitud palabra encontrada: %d\n",strlen(buffer_palabra));
 				agregar_palabra(buffer_palabra);
 				contador_caracter_palabra = 0;
 			}
-			printf("\n contador caracter %d \n",contador_caracter_palabra);
 		}
-		//mostrar_palabras_reconocidas(lista_palabras);
+		mostrar_palabras_reconocidas();
 	}
 
 	return EXIT_SUCCESS;
