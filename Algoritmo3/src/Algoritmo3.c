@@ -41,13 +41,12 @@ char tabla_transiciones[10][15] = {
 //Estado fin de texto 7
 
 int main(int argc, char *argv[]) {
-	char buffer_palabra[15];
-	int contador_caracter_palabra = 0;
 
 	void imprimir(char tabla[ROWS][COLS]){
 		puts("/////TABLA TRANSICIONES/////");
-		for (int i = 0; i < ROWS; ++i) {
-			for (int j = 0; j < COLS; ++j) {
+		int i,j;
+		for (i = 0; i < ROWS; ++i) {
+			for (j = 0; j < COLS; ++j) {
 				printf("%c ",tabla[i][j]);
 			}
 			puts("");
@@ -65,7 +64,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	int obtener_col(char caracter_leido){
-		for (int var = 0; var < COLS; ++var) {
+		int var;
+		for (var = 0; var < COLS; ++var) {
 			if(tabla_transiciones[0][var] == caracter_leido){
 				return var;
 			}
@@ -79,24 +79,59 @@ int main(int argc, char *argv[]) {
 		return tabla_transiciones[row_number][col_number];
 	}
 
+	char ** lista_palabras = NULL;
+	int cantidad_palabras = 0;
+	void agregar_palabra(char *palabra, char **lista_palabras){
+		printf("palabra: %s \n",palabra);
+		//lista_palabras = (char**)realloc(lista_palabras, cantidad_palabras * sizeof(char*));
+		//lista_palabras[cantidad_palabras++] = strdup(palabra);
+
+/*
+		while(*lista_palabras != NULL){
+			cantidad_palabras++;
+			lista_palabras++;
+		}
+		printf("%d",cantidad_palabras);
+*/
+		//lista_palabras = (char**)realloc(lista_palabras, cantidad_palabras * sizeof(char*));
+
+		//lista_palabras[cantidad_palabras] = strdup(palabra);
+
+
+	}
+
+	void mostrar_palabras_reconocidas(){
+		puts("Palabras Encontradas:");
+		int i = 0;
+		puts("ljhdjldda");
+		printf("saada %s",lista_palabras[0]);
+		while(*lista_palabras != NULL){
+			printf("palabra: %s \n",lista_palabras[i++]);
+			lista_palabras++;
+		}
+	}
+
+	char buffer_palabra[15];
+	int contador_caracter_palabra = 0;
 	while(--argc>0){
 		printf("Entrada %s\n\n",*++argv);
 		char estado_actual = '0';
 		char caracter = '\0';
-		for (int var = 0; var < strlen(*argv); ++var) {
-			caracter = (*argv)[var];
+		int iteracion;
+		for (iteracion = 0; iteracion < strlen(*argv); ++iteracion) {
+			caracter = (*argv)[iteracion];
 			buffer_palabra[contador_caracter_palabra]=caracter;
 			estado_actual = buscar_nuevo_estado(estado_actual,caracter);
-			imprimir_caracter_y_estado(var, caracter,estado_actual);
+			imprimir_caracter_y_estado(iteracion, caracter,estado_actual);
 			contador_caracter_palabra++;
-			//la variable var llega a 40, necesito otra que se reinicie cada vez que encuentra una palabra
-			contador_caracter_palabra = (estado_actual=='0')?0:contador_caracter_palabra;
+			contador_caracter_palabra = (estado_actual=='0') ? 0 : contador_caracter_palabra;
 			if(estado_actual=='6'){
 				buffer_palabra[--contador_caracter_palabra]='\0';
-				printf("Encontre palabra valida!!!: %s\n",buffer_palabra);
+				agregar_palabra(buffer_palabra,lista_palabras);
 				contador_caracter_palabra = 0;
 			}
 		}
+		//mostrar_palabras_reconocidas();
 	}
 
 	return EXIT_SUCCESS;
